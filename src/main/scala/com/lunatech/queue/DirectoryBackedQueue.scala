@@ -1,13 +1,14 @@
 package com.lunatech.queue
 
 import java.io.{ File, FileFilter, FileNotFoundException, IOException }
-import java.nio.file.{ Files, Path }
+import java.nio.file.{ Files, NoSuchFileException, Path }
 import java.nio.file.StandardCopyOption.ATOMIC_MOVE
 import java.nio.file.StandardOpenOption.{ CREATE_NEW, SYNC }
+
 import scala.Array.canBuildFrom
 import scala.collection.immutable.{ Queue => ScalaQueue }
+
 import com.fasterxml.uuid.Generators
-import java.nio.file.NoSuchFileException
 
 /**
  * Directory backed persistent queue.
