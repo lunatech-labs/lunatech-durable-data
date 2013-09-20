@@ -8,7 +8,7 @@ import java.nio.file.StandardOpenOption.{ CREATE_NEW, SYNC }
 import scala.Array.canBuildFrom
 import scala.collection.immutable.{ Queue => ScalaQueue }
 
-import com.fasterxml.uuid.Generators
+import com.fasterxml.uuid.{NoArgGenerator, Generators}
 
 /**
  * Directory backed persistent queue.
@@ -16,7 +16,7 @@ import com.fasterxml.uuid.Generators
  * A [[Queue]] implementation that stores elements in the queue as files in a
  * directory. Files are named with a time-based UUID.
  *
- * All methods on this queue are thread safe, and multiple queues can be created
+ * All methods on this queue are thread safe, and multiple instances can be created
  * with the same backing directory.
  *
  * ==Storage details==
@@ -41,7 +41,7 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
   /**
    * Generator for time-based uuids
    */
-  protected val uuidGenerator = Generators.timeBasedGenerator
+  protected val uuidGenerator: NoArgGenerator = Generators.timeBasedGenerator
 
   /**
    * Filter that selects the files are elements of the queue
@@ -56,7 +56,7 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
   override def enqueue(element: E): String = enqueueBytes(serializer serialize element)
 
   /**
-   * Enqueue an element as bytes
+   * Enqueue an element as bytes.
    * Writes bytes to a hidden file in the backing directory and does an atomic
    * move to a non hidden file when ready.
    */
@@ -73,7 +73,7 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
   override def dequeue(): Option[E] = dequeueBytes() map { serializer.deserialize }
 
   /**
-   * Dequeue an element and return the bytes
+   * Dequeue an element and return the bytes.
    *
    * Relies on Files.delete to throw an exception if the file is already deleted.
    */
@@ -90,13 +90,13 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
     }
 
   /**
-   * Find the next file that is a queue element
+   * Find the next file that is a queue element.
    *
-   * Used caching to reduce the required number of directory scans. Sorts files
+   * Uses caching to reduce the required number of directory scans. Sorts files
    * by filename, which is by enqueue order because of the timestamp based UUID
    * filename.
    *
-   * This method is synchronized
+   * This method is synchronized.
    */
   protected def nextFile(): Option[Path] = synchronized {
     if (cachedFiles.isEmpty) cachedFiles ++= findFiles
@@ -109,7 +109,7 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
   }
 
   /**
-   * List files in the backing directory
+   * List files in the backing directory.
    */
   protected def findFiles = try {
     backingDirectory.toFile.listFiles(elementFileFilter).sorted.map { _.toPath }
@@ -122,7 +122,7 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
 }
 
 /**
- * This object provides operations to create [[DirectoryBackedQueue]] instances
+ * This object provides operations to create [[DirectoryBackedQueue]] instances.
  */
 object DirectoryBackedQueue {
   /**
