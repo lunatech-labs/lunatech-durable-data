@@ -7,6 +7,7 @@ import scala.collection.JavaConverters.setAsJavaSetConverter
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
+import scala.io.Codec
 
 import org.specs2.mutable.{ After, Specification }
 
@@ -39,6 +40,16 @@ class DirectoryBackedQueueSpec extends Specification {
       queue.enqueue("baz")
       (queue.dequeue(), queue.dequeue(), queue.dequeue()) must_==
         (Some("foo"), Some("bar"), Some("baz"))
+    }
+  }
+
+  "A Byte Array Queue" should {
+    "handle a byte array" in new ByteQueueScope {
+      val foo: Array[Byte] = "FOO".getBytes(Codec.UTF8.charSet)
+      queue.enqueue(foo)
+      val dequeued = queue.dequeue
+      dequeued must beSome
+      dequeued.get.toSeq must_== foo.toSeq
     }
   }
 
@@ -158,7 +169,7 @@ class DirectoryBackedQueueSpec extends Specification {
       1 to elements foreach { _ => queue.enqueue(elementContent) }
 
       val countsPerThreadFutures = (1 to threads).map { _ =>
-        val queueForThread = DirectoryBackedQueue(directory)
+        val queueForThread = DirectoryBackedQueue[String](directory)
         Future {
           (1 to elements).foldLeft(0) { case (count, _) => queueForThread.dequeue().map { _ => count + 1 } getOrElse count }
         }
@@ -174,6 +185,17 @@ class DirectoryBackedQueueSpec extends Specification {
   trait QueueScope extends After {
     val directory = Files.createTempDirectory("queue-")
     val queue = DirectoryBackedQueue[String](directory)
+    def emptyDirectory() = directory.toFile.listFiles().foreach { _.delete() }
+
+    override def after() = {
+      emptyDirectory()
+      Files.delete(directory)
+    }
+  }
+
+  trait ByteQueueScope extends After {
+    val directory = Files.createTempDirectory("queue-")
+    val queue = DirectoryBackedQueue[Array[Byte]](directory)
     def emptyDirectory() = directory.toFile.listFiles().foreach { _.delete() }
 
     override def after() = {

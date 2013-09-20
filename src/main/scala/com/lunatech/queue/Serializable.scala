@@ -22,6 +22,13 @@ trait Serializable[E] {
  * Default Serializable implementations
  */
 trait DefaultSerializables {
+  /**
+   * Serializable for Array[Byte].
+   */
+  implicit val ByteArraySerializable = new Serializable[Array[Byte]] {
+    def serialize(element: Array[Byte]) = element
+    def deserialize(bytes: Array[Byte]) = bytes
+  }
 
   /**
    * Serializable for String. Encodes with UTF8 character set.
