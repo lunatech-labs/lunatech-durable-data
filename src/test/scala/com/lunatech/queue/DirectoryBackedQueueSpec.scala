@@ -49,7 +49,7 @@ class DirectoryBackedQueueSpec extends Specification {
       queue.enqueue(foo)
       val dequeued = queue.dequeue
       dequeued must beSome
-      dequeued.get.toSeq must_== foo.toSeq
+      dequeued.get must_== foo
     }
   }
 
