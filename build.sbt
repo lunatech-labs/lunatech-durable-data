@@ -2,7 +2,7 @@ name := "dirqueue"
 
 scalaVersion := "2.10.2"
 
-version := "0.1"
+version := "0.2-SNAPSHOT"
 
 organization := "com.lunatech"
 

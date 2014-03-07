@@ -5,8 +5,17 @@ Dirqueue is a filesystem based, persistent queue in Scala. It's intended to acco
 
 There is a `Queue` interface trait, and a single implementation: `DirectoryBackedQueue`. The `Queue` interface has only two methods: `enqueue(elem: E): String` and `dequeue(): Option[E]`. The `dequeue` method returns a `None` if the queue is empty and a `Some` if there is an element.
 
+Quick start
+-----------
+
+Add to your `build.sbt`:
+
+    resolvers += "Lunatech Public Releases" at "http://artifactory.lunatech.com/artifactory/releases-public"
+    
+    libraryDependencies += "com.lunatech" %% "dirqueue" % "0.1"
+
 usage
-===
+-----
 
 A `com.lunatech.queue.Serializable` typeclass intance is required for the element type that is queued. An instance for `String` is provided.
 
@@ -27,14 +36,14 @@ Consumer:
     }
 
 Development
-===
+-----------
 
  * Build with `sbt compile`
  * Generate Scaladoc with `sbt doc`
  * Run tests with `sbt test`
 
 License
-===
+-------
 This software is licensed under the Apache 2 license, quoted below.
 
 Copyright 2013 Lunatech Labs (http://www.lunatech.com).
