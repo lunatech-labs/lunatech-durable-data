@@ -11,7 +11,7 @@ Quick start
 Add to your `build.sbt`:
 
     resolvers += "Lunatech Public Releases" at "http://artifactory.lunatech.com/artifactory/releases-public"
-    
+
     libraryDependencies += "com.lunatech" %% "dirqueue" % "0.1"
 
 usage
@@ -23,13 +23,13 @@ The backing directory must already exist.
 
 Producer:
 
-    val directory = File("./my-backing-dir").toPath
+    val directory = new File("./my-backing-dir").toPath
     val queue = DirectoryBackedQueue[String](directory)
     queue.enqueue("foo")
 
 Consumer:
 
-    val directory = File("./my-backing-dir").toPath
+    val directory = new File("./my-backing-dir").toPath
     val queue = DirectoryBackedQueue[String](directory)
     queue.deqeuue.map { element =>
       // We've got an element
