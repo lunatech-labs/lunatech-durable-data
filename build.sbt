@@ -1,6 +1,6 @@
 name := "dirqueue"
 
-scalaVersion := "2.10.2"
+crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 version := "0.2-SNAPSHOT"
 
@@ -8,7 +8,7 @@ organization := "com.lunatech"
 
 libraryDependencies += "com.fasterxml.uuid" % "java-uuid-generator" % "3.1.3"
 
-libraryDependencies += "org.specs2" %% "specs2" % "2.2" % "test"
+libraryDependencies += "org.specs2" %% "specs2-core" % "2.4.6" % "test"
 
 publishTo in ThisBuild <<= version { (v: String) =>
   val path = if(v.trim.endsWith("SNAPSHOT")) "snapshots-public" else "releases-public"
