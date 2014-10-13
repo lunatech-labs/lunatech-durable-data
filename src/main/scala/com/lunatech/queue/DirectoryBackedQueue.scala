@@ -4,10 +4,9 @@ import java.io.{ File, FileFilter, FileNotFoundException, IOException }
 import java.nio.file.{ Files, NoSuchFileException, Path }
 import java.nio.file.StandardCopyOption.ATOMIC_MOVE
 import java.nio.file.StandardOpenOption.{ CREATE_NEW, SYNC }
-
 import scala.Array.canBuildFrom
+import scala.annotation.tailrec
 import scala.collection.immutable.{ Queue => ScalaQueue }
-
 import com.fasterxml.uuid.{NoArgGenerator, Generators}
 
 /**
@@ -77,16 +76,25 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
    *
    * Relies on Files.delete to throw an exception if the file is already deleted.
    */
-  protected def dequeueBytes(): Option[Array[Byte]] =
-    nextFile() flatMap { file =>
-      try {
-        val bytes = Files.readAllBytes(file)
-        Files.delete(file)
-        Some(bytes)
-      } catch {
-        case e: NoSuchFileException => dequeueBytes()
+  protected def dequeueBytes(): Option[Array[Byte]] = {
+    // Outer method is protected, so can't be @tailrec'ed. So we use a
+    // local method that can be @tailrec'ed.
+    @tailrec
+    def loop(): Option[Array[Byte]] = {
+      nextFile() match {
+        case None => None
+        case Some(file) => try {
+          val bytes = Files.readAllBytes(file)
+          Files.delete(file)
+          Some(bytes)
+        } catch {
+          case e: NoSuchFileException => loop()
+        }
       }
     }
+    loop()
+  }
+
 
   /**
    * Find the next file that is a queue element.
