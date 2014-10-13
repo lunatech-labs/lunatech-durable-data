@@ -1,39 +1,33 @@
-dirqueue
+Durable Data
 ===
 
-Dirqueue is a filesystem based, persistent queue in Scala. It's intended to accommodate message passing between processes, without the receiving process to be running all the time.
+Lunatech Durable is a project contains several very simple Scala data structures that are backed by a filesystem. These structures survive application restarts and because they are so simple and easy to fully understand their behaviour, they are useful building blocks.
 
-There is a `Queue` interface trait, and a single implementation: `DirectoryBackedQueue`. The `Queue` interface has only two methods: `enqueue(elem: E): String` and `dequeue(): Option[E]`. The `dequeue` method returns a `None` if the queue is empty and a `Some` if there is an element.
+Goals
+---
+
+To provide foundational durable data structures whose behaviour under all circumstances is easy to understand.
+
+Datastructures
+---
+
+* [DirectoryBackedQueue](docs/dirqueue.md) is a durable queue, that can be used from multiple processes. It's aim is to provide inter-process communication.
+* [DirectoryBackedBag](docs/dirbag.md) is a durable bag (multiset). It's main usecase is creating a durable copy of running tasks in a system, that can be used to restart the tasks if the system restarts.
 
 Quick start
 -----------
+
+Durable Data is built against Scala 2.10 and 2.11.
+
 
 Add to your `build.sbt`:
 
     resolvers += "Lunatech Public Releases" at "http://artifactory.lunatech.com/artifactory/releases-public"
 
     libraryDependencies += "com.lunatech" %% "dirqueue" % "0.1"
+    
+Then see the links in the `Datastructures` section of this README for additional documentation for each data structure.
 
-usage
------
-
-A `com.lunatech.queue.Serializable` typeclass intance is required for the element type that is queued. An instance for `String` is provided.
-
-The backing directory must already exist.
-
-Producer:
-
-    val directory = new File("./my-backing-dir").toPath
-    val queue = DirectoryBackedQueue[String](directory)
-    queue.enqueue("foo")
-
-Consumer:
-
-    val directory = new File("./my-backing-dir").toPath
-    val queue = DirectoryBackedQueue[String](directory)
-    queue.deqeuue.map { element =>
-      // We've got an element
-    }
 
 Development
 -----------
