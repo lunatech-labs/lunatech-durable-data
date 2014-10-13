@@ -88,7 +88,8 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
           Files.delete(file)
           Some(bytes)
         } catch {
-          case e: NoSuchFileException => loop()
+          case _: NoSuchFileException => loop()
+          case _: IOException => loop() // This has been observed to happen.
         }
       }
     }
