@@ -82,7 +82,6 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
       try {
         val bytes = Files.readAllBytes(file)
         Files.delete(file)
-        val p = new sun.nio.fs.BsdFileSystemProvider
         Some(bytes)
       } catch {
         case e: NoSuchFileException => dequeueBytes()
