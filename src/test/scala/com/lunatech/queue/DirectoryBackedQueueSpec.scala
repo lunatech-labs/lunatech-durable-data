@@ -1,17 +1,15 @@
+import com.lunatech.queue.{ DirectoryBackedQueue, Serializable }
 import java.io.{ File, FileNotFoundException, IOException }
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission.{ OWNER_EXECUTE, OWNER_READ }
 import java.util.concurrent.TimeUnit
-
+import org.specs2.mutable.{ After, Specification }
 import scala.collection.JavaConverters.setAsJavaSetConverter
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 import scala.io.Codec
-
-import org.specs2.mutable.{ After, Specification }
-
-import com.lunatech.queue.{ DirectoryBackedQueue, Serializable }
 
 class DirectoryBackedQueueSpec extends Specification {
 
@@ -80,11 +78,8 @@ class DirectoryBackedQueueSpec extends Specification {
     }
 
     "pickup elements queued in a different DirectoryBackedQueue backed by the same directory" in new QueueScope {
-      val hiddenFilePath = directory resolve ".hidden"
-      val nonHiddenFilePath = directory resolve "unhidden"
-      val fileContent = implicitly[Serializable[String]].serialize("baz")
-      Files.write(hiddenFilePath, fileContent)
-      Files.move(hiddenFilePath, nonHiddenFilePath)
+      val otherQueue = DirectoryBackedQueue[String](directory)
+      otherQueue.enqueue("baz")
       queue.dequeue must_== Some("baz")
     }
 
