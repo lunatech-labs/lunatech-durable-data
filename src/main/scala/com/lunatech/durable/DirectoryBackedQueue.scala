@@ -89,7 +89,14 @@ class DirectoryBackedQueue[E] private (serializer: Serializable[E], backingDirec
           Some(bytes)
         } catch {
           case _: NoSuchFileException => loop()
-          case _: IOException => loop() // This has been observed to happen.
+          // We've also observed IOExceptions when the file didn't exist anymore.
+          // To prevent getting into infinite loops on this file if the IOError
+          // is not caused by that, we must make sure it's actually gone.
+          case e: IOException =>
+            // If we put this in the guard, scalac compiles that loop() is not in
+            // tail position anymore.
+            if(!Files.exists(file)) loop()
+            else throw e
         }
       }
     }
