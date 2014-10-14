@@ -24,7 +24,7 @@ Add to your `build.sbt`:
 
     resolvers += "Lunatech Public Releases" at "http://artifactory.lunatech.com/artifactory/releases-public"
 
-    libraryDependencies += "com.lunatech" %% "durable-data" % "1.0"
+    libraryDependencies += "com.lunatech" %% "durable-data" % "1.1"
     
 Then see the links in the `Datastructures` section of this README for additional documentation for each data structure.
 
