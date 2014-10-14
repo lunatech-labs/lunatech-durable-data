@@ -2,7 +2,7 @@ name := "durable-data"
 
 crossScalaVersions := Seq("2.10.4", "2.11.2")
 
-version := "1.1"
+version := "1.2-SNAPSHOT"
 
 organization := "com.lunatech"
 
