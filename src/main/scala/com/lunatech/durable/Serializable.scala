@@ -6,7 +6,7 @@ import scala.annotation.implicitNotFound
 /**
  * Type class for serialization to byte arrays and back.
  */
-@implicitNotFound("No instance of Serializable found for [${E}]. Please implement a Serializable[${E}], or put it in scope!")
+@implicitNotFound("No instance of Serializable found for ${E}. Please implement a Serializable[${E}] and put it in scope.")
 trait Serializable[E] {
 
   /**
