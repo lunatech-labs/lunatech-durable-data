@@ -1,4 +1,4 @@
-package com.lunatech.queue
+package com.lunatech.durable
 
 trait Bag[E] {
   /**

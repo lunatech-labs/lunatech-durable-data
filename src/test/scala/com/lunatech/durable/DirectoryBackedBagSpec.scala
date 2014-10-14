@@ -1,4 +1,5 @@
-import com.lunatech.queue.{ DirectoryBackedBag, Serializable }
+package com.lunatech.durable
+
 import java.io.{ File, FileNotFoundException, IOException }
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission.{ OWNER_EXECUTE, OWNER_READ }

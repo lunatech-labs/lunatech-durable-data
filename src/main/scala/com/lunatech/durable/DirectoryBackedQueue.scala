@@ -1,4 +1,4 @@
-package com.lunatech.queue
+package com.lunatech.durable
 
 import java.io.{ File, FileFilter, FileNotFoundException, IOException }
 import java.nio.file.{ Files, NoSuchFileException, Path }

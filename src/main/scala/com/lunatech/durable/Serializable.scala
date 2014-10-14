@@ -1,6 +1,7 @@
-package com.lunatech.queue
+package com.lunatech.durable
 
 import scala.io.Codec
+import scala.annotation.implicitNotFound
 
 /**
  * Type class for serialization to byte arrays and back.

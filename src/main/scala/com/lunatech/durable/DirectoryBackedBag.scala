@@ -1,4 +1,4 @@
-package com.lunatech.queue
+package com.lunatech.durable
 
 import com.fasterxml.uuid.{ Generators, NoArgGenerator }
 import java.io.{ File, FileFilter }
